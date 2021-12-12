@@ -1,8 +1,7 @@
 # Github Repository Recommender
 
-img[https://img.shields.io/badge/node-v12.18.3-blue]
-
-https://img.shields.io/badge/npm-v6.14.6-blue
+<a href="#"><img src="https://img.shields.io/badge/node-v12.18.3-blue"></a>
+<a href="#"><img src="https://img.shields.io/badge/npm-v6.14.6-blue"></a>
 
 ## Docker
 
