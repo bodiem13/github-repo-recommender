@@ -5,11 +5,10 @@
 
 ## Docker
 
-### Build Docker image
-`docker build -t github:react-app .` 
-
 ### Run React app through Docker
-`docker run -p 3001:3000 github:react-app`
+1. `docker build -t github:react-app .`
+2. `docker run -p 3001:3000 github:react-app`
+3. [View github recommender here](http://localhost:3001)
 
 ### Run with more parameters
 ```
