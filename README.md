@@ -1,5 +1,8 @@
 # Github Repository Recommender
 
+https://img.shields.io/badge/node-v12.18.3-blue
+https://img.shields.io/badge/npm-v6.14.6-blue
+
 ## Docker
 
 ### Build Docker image
