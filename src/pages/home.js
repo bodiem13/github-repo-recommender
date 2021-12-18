@@ -7,10 +7,8 @@ const Home = () => {
     return(
         <div style={HomeContainer}>
             <Navbar/>
-            <div style={HomeContainer}>
             <h1>Test</h1>
-            </div>
-        </div>
+        </div> 
     );   
 };
 
