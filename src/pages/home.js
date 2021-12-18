@@ -1,10 +1,15 @@
 import React from 'react';
-import Navbar from '../components/Navbar/Navbar'
+import Navbar from '../components/Navbar/Navbar';
+import {HomeContainer} from '../components/HomeContainer/HomeElements'
+
 
 const Home = () => {
     return(
-        <div>
+        <div style={HomeContainer}>
             <Navbar/>
+            <div style={HomeContainer}>
+            <h1>Test</h1>
+            </div>
         </div>
     );   
 };
