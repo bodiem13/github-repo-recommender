@@ -8,7 +8,7 @@ const Navbar = () => {
         <div>
             <Nav>
                 <NavLinkLogo to={"/"}>
-                    <FaGithub style={{fontSize: '50px'}}/>
+                    <FaGithub style={{fontSize: '50px', color: '#ffffff'}}/>
                 </NavLinkLogo>
                 <Bars />
                 <NavMenu>

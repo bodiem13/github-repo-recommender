@@ -3,7 +3,7 @@ import { NavLink as Link } from "react-router-dom";
 import { FaBars } from "react-icons/all";
 
 export const Nav = styled.nav`
-    background: #f5f5f5;
+    background: #333;
     height: 80px;
     display: flex;
     justify-content: space-between;
@@ -11,7 +11,7 @@ export const Nav = styled.nav`
 `;
 
 export const NavLink = styled(Link)`
-    color: #808080;
+    color: #ffffff;
     display: flex;
     align-items: center;
     text-decoration: none;
