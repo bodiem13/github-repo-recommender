@@ -1,8 +1,17 @@
-const SearchBar = () => {
+import React from 'react'
+import {SearchBarStyling} from './SearchBarElements'
+
+const SearchBar = ({repoUrl, getRepoDetails}) => {
     return(
         <div>
-            <h1>Search Bar Component</h1>
+            <input 
+            style={SearchBarStyling}
+            key="random1"
+            value={repoUrl}
+            placeholder={"Enter GitHub Repository Link"}
+            onChange={(e) => getRepoDetails(e.target.value)}
+            />
         </div>
     );
 };
-export default SearchBar
+export default SearchBar;

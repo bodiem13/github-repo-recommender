@@ -7,9 +7,9 @@ import SearchBar from '../components/SearchBar/SearchBar'
 const Home = () => {
     return(
         <div style={HomeContainer}>
-            <Navbar/>
+            <Navbar />
             <h1>Test</h1>
-            <SearchBar/>
+            <SearchBar />
         </div> 
     );   
 };
