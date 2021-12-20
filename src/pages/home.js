@@ -17,7 +17,8 @@ const Home = () => {
         <div style={HomeContainer}>
             <Navbar />
             <h1>Test</h1>
-            <SearchBar input={input} onChange={updateInput}/>
+            {/*To add data options to the search bar, add a second prop for data */}
+            <SearchBar placeholder="Please enter GitHub Repository Url..."/>
         </div> 
     );   
 };
