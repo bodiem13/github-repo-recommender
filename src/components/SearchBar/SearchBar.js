@@ -1,26 +1,20 @@
 import React from 'react'
-import {SearchBarStyling} from './SearchBarElements'
+//import {SearchBarStyling, search, searchIcon, searchInputs} from './SearchBarElements'
+import './SearchBarElements.css'
+import SearchIcon from '@material-ui/icons/Search';
 
-//props of repoUrl and getRepoDetails are passed to the component
-const SearchBar = ({input:repoUrl, onChange:getRepoDetails}) => {
-    function collectSearch(e){
-        console.log("The collectSearch function is being ran")
-    }
+//props of placeholder and repoUrl are passed to the component
+const SearchBar = ({placeholder, repoUrl}) => {
 
     return(
-        <div>
-            <form onSubmit={collectSearch}>
-                <input 
-                style={SearchBarStyling}
-                key="foo"
-                value={repoUrl}
-                placeholder={"Enter GitHub Repository Link"}
-                onChange={(e) => getRepoDetails(e.target.value)}
-                />
-                <button type="submit">
-                    Search
-                </button>
-            </form>
+        <div className="search">
+            <div className="searchInputs">
+                {/*placeholder is being populated by the placeholder prop*/}
+                <input type="test" placeholder={placeholder}/>
+                {/*Make SearchIcon a component for the import! */}
+                <div className="searchIcon"><SearchIcon /></div>
+            </div>
+            <div className="dataResult"></div>
         </div>
     );
 };
