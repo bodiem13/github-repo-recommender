@@ -1,10 +1,12 @@
-import React from 'react'
+import React, {useState} from 'react'
 //import {SearchBarStyling, search, searchIcon, searchInputs} from './SearchBarElements'
 import './SearchBarElements.css'
 import SearchIcon from '@material-ui/icons/Search';
 
 //props of placeholder and repoUrl are passed to the component
 const SearchBar = ({placeholder, repoUrl}) => {
+    const [filteredData, setFilteredData] = useState([]);
+
 
     return(
         <div className="search">
@@ -14,7 +16,12 @@ const SearchBar = ({placeholder, repoUrl}) => {
                 {/*Make SearchIcon a component for the import! */}
                 <div className="searchIcon"><SearchIcon /></div>
             </div>
-            <div className="dataResult"></div>
+            {filteredData.length != 0 && (
+                <div className="dataResult">
+                    <h1>Filter is being ran</h1>
+                </div>
+                )
+            }
         </div>
     );
 };
