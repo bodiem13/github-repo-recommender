@@ -6,10 +6,6 @@ import SearchIcon from '@material-ui/icons/Search';
 //props of placeholder and repoUrl are passed to the component
 const SearchBar = ({placeholder}) => {
     const [repoUrl, setRepoUrl] = useState("");
-    // const []
-    function captureInput() {
-        console.log("Capture input function is being ran.");
-    }
 
     const handleRepoUrl = (event) => {
         console.log("handleRepoUrl function has been successfully ran!")
@@ -18,7 +14,10 @@ const SearchBar = ({placeholder}) => {
         console.log(event);
     }
 
-
+    const captureInput = () => {
+        console.log("Repository URL has been captured.")
+        console.log(repoUrl);
+    }
 
     return(
         <div className="search">
