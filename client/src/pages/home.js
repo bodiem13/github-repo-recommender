@@ -8,8 +8,8 @@ const Home = () => {
     const [input, setInput] = useState('');
 
     const updateInput = async (input) => {
-        setInput('newSetInput');
-        console.log("This function is getting called.")
+        setInput('This is my manual set of input');
+        console.log("This function updateInput is getting called.");
     };
 
 
@@ -18,7 +18,7 @@ const Home = () => {
             <Navbar />
             <h1>Test</h1>
             {/*To add data options to the search bar, add a second prop for data */}
-            <SearchBar placeholder="Enter a GitHub Repository Url..."/>
+            <SearchBar placeholder = "Enter a GitHub Repository Url..."/>
         </div> 
     );   
 };
