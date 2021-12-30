@@ -8,13 +8,16 @@ const SearchBar = ({placeholder, repoUrl}) => {
     const [filteredData, setFilteredData] = useState([]);
 
 
+
     return(
         <div className="search">
             <div className="searchInputs">
                 {/*placeholder is being populated by the placeholder prop*/}
                 <input type="test" placeholder={placeholder}/>
                 {/*Make SearchIcon a component for the import! */}
-                <div className="searchIcon"><SearchIcon /></div>
+                <div className='button'>
+                    <button className="searchIcon"><SearchIcon /></button>
+                </div>
             </div>
             {filteredData.length != 0 && (
                 <div className="dataResult">
