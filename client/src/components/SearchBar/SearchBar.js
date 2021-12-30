@@ -4,24 +4,31 @@ import './SearchBarElements.css'
 import SearchIcon from '@material-ui/icons/Search';
 
 //props of placeholder and repoUrl are passed to the component
-const SearchBar = ({placeholder, repoUrl}) => {
-    const [filteredData, setFilteredData] = useState([]);
+const SearchBar = ({placeholder}) => {
+    const [repoUrl, setRepoUrl] = useState("");
 
+    const handleRepoUrl = (event) => {
+        console.log("handleRepoUrl function has been successfully ran!")
+        const enteredUrl = event.target.value;
+        setRepoUrl(enteredUrl);
+        console.log(event);
+    }
+
+    const captureInput = () => {
+        console.log("Repository URL has been captured.")
+        console.log(repoUrl);
+    }
 
     return(
         <div className="search">
             <div className="searchInputs">
                 {/*placeholder is being populated by the placeholder prop*/}
-                <input type="test" placeholder={placeholder}/>
+                <input type="text" value={repoUrl} placeholder={placeholder} onChange={handleRepoUrl}/>
                 {/*Make SearchIcon a component for the import! */}
-                <div className="searchIcon"><SearchIcon /></div>
-            </div>
-            {filteredData.length != 0 && (
-                <div className="dataResult">
-                    <h1>Filter is being ran</h1>
+                <div className='button'>
+                    <button type="submit" className="searchIcon" onClick={captureInput}><SearchIcon /></button>
                 </div>
-                )
-            }
+            </div>
         </div>
     );
 };

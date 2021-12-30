@@ -20,6 +20,8 @@
   background-color: white;
   display: grid;
   place-items: center;
+  border: none;
+  cursor: pointer;
 }
 
 input:focus {
@@ -27,4 +29,8 @@ input:focus {
 }
 .searchIcon svg {
   font-size: 35px;
+}
+
+.button {
+  border: none;
 }
