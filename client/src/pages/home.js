@@ -10,11 +10,8 @@ const Home = () => {
         <div style={HomeContainer}>
             <Navbar />
             <h1 className="text-3xl font-bold underline text-red-500">
-                Hello world!
+                Header using tailwind css
             </h1>
-            <h4 className="text-3xl font-bold underline text-red-500">
-                Hello world!
-            </h4>
             {/*To add data options to the search bar, add a second prop for data */}
             <SearchBar placeholder = "Enter a GitHub Repository Url..."/>
         </div> 
