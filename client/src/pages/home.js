@@ -16,7 +16,9 @@ const Home = () => {
     return(
         <div style={HomeContainer}>
             <Navbar />
-            <h1>Test</h1>
+            <h1 className="text-3xl font-bold underline text-red-500">
+                Hello world!
+            </h1>
             {/*To add data options to the search bar, add a second prop for data */}
             <SearchBar placeholder = "Enter a GitHub Repository Url..."/>
         </div> 
