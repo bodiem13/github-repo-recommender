@@ -1,24 +1,24 @@
 import React from 'react';
-import { Nav, Bars, NavLink, NavMenu, NavLinkLogo } from './NavbarElements';
+import {Bars, NavLink, NavMenu} from './NavbarElements';
 import { FaGithub } from 'react-icons/fa';
 
 const Navbar = () => {
     //FaGithub
     return(
         <div>
-            <Nav>
-                <NavLinkLogo to={"/"}>
-                    <FaGithub style={{fontSize: '50px', color: '#ffffff'}}/>
-                </NavLinkLogo>
+            <div className="bg-gray-850 h-20 flex justify-between z-10">
+                <a className="flex items-center no-underline h-full cursor-pointer px-4 py-0" href={"/"}>
+                    <FaGithub className="text-5xl text-white"/>
+                </a>
                 <Bars />
                 <NavMenu>
                     <NavLink to={"/about"} activeStyle>
                         About
                     </NavLink>
                 </NavMenu>
-            </Nav>
+            </div>
         </div>
     );
 };
 
-export default Navbar
+export default Navbar;
