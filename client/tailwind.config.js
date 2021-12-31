@@ -4,10 +4,13 @@ module.exports = {
     "./public/index.html"
   ],
   theme: {
+    screens: {
+      // 'md': {'max': '768px'}
+    },
     extend: {
       colors: {
         gray: {
-          850: '#333'
+          github: '#333'
         }
       }
     },
