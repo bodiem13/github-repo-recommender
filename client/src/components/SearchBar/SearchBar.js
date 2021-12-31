@@ -22,20 +22,14 @@ const SearchBar = ({placeholder}) => {
         const userMessage = "The following user input has been handled: " + repoUrl
         setUserEnteredUrl(<p style={{textAlign: "left"}}>{userMessage}</p>)
     }
-//     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-//   <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
-// </svg>
-//     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-//     <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
-//   </svg>
     return(
-        <div className="search">
-            <div className="searchInputs">
+        <div className="bg-gray-50 border-0 rounded text-base pl-2 pr-2 h-8 w-80">
+            <div className="flex-1 mt-28">
                 {/*placeholder is being populated by the placeholder prop*/}
                 <input type="text" value={repoUrl} placeholder={placeholder} onChange={handleRepoUrl}/>
                 {/*Make SearchIcon a component for the import! */}
-                <div className='button'>
-                    <button type="submit" className="searchIcon" onClick={captureInput}><SearchIcon /></button>
+                <div className="border-transparent">
+                    <button type="submit" className="h-14 w-12 bg-white grid-flow-row focus:border-gray-700 place-items-center border-transparent cursor-pointer" onClick={captureInput}><SearchIcon /></button>
                 </div>
                 {userEnteredUrl}
             </div>
@@ -43,3 +37,32 @@ const SearchBar = ({placeholder}) => {
     );
 };
 export default SearchBar;
+
+// .search input {
+//     background-color: white;
+//     border: 0;
+//     border-radius: 2px;
+//     border-top-right-radius: 0px;
+//     border-bottom-right-radius: 0px;
+//     font-size: 18px;
+//     padding: 15px;
+//     height: 30px;
+//     width: 300px;
+//   }
+
+// .searchIcon {
+//     height: 60px;
+//     width: 50px;
+//     background-color: white;
+//     display: grid;
+//     place-items: center;
+//     border: none;
+//     cursor: pointer;
+//   }
+  
+//   input:focus {
+//     outline: none;
+//   }
+//   .searchIcon svg {
+//     font-size: 35px;
+//   }
