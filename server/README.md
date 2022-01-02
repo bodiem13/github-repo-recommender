@@ -3,9 +3,15 @@
     <h4 align="center">Recommendation system for improving maintainability and scalability of Github repositories. </h4>
 </p>
 
-## Dependencies
+## Table of Contents
+ * [Installation](#installation)
+    * [Dependencies](#dependencies)
 
-[![PythonPy: 3.10.0](https://img.shields.io/badge/Python-3.9.1-blue.svg)(#)
+## Installation
+### Dependencies
+
+[![Python: 3.10.0](https://img.shields.io/badge/Python-3.10.0-blue)](#)
+[![Anaconda: 3.10.0](https://img.shields.io/badge/Conda-4.9.0-green.svg)](#)
 
 Set up a virtual environment and install package dependencies for successful computing:
 
