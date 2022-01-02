@@ -1,4 +1,7 @@
-# Server
+<p align="center">
+    <h1 align="center">Github Repository Recommendation System</h1>
+    <h4 align="center">Recommendation system for improving maintainability and scalability of Github repositories. </h4>
+</p>
 
 ## Dependencies
 
