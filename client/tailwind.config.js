@@ -4,7 +4,16 @@ module.exports = {
     "./public/index.html"
   ],
   theme: {
-    extend: {},
+    screens: {
+      // 'md': {'max': '768px'}
+    },
+    extend: {
+      colors: {
+        gray: {
+          github: '#333'
+        }
+      }
+    },
   },
   plugins: [],
 }
