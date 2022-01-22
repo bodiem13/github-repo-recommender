@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import Navbar from '../components/Navbar/Navbar';
 import SearchBar from '../components/SearchBar/SearchBar'
+import DataList from '../components/DataList/DataList'
 
 const Home = () => {
     //creates my state and use state
@@ -30,15 +31,8 @@ const Home = () => {
             {/*To add data options to the search bar, add a second prop for data */}
             <SearchBar placeholder = "Enter a GitHub Repository Url..."/>
             <h1>Django responses</h1>
-            {/*iterate through api call response with map*/}
-            {articles.map(article => {
-                return (
-                    <div key = {article.id}>
-                        <h4>{article.title}</h4>
-                        <p>{article.description}</p>
-                    </div>
-                    )
-            })}
+            {/*Send articles as prop to the DataList component*/}
+            <DataList articles = {articles}/>
         </div> 
     );   
 };
