@@ -6,6 +6,7 @@
 ## Table of Contents
  * [Installation](#installation)
     * [Dependencies](#dependencies)
+ * [Start Django](#start-django)
 
 ## Installation
 ### Dependencies
@@ -19,3 +20,6 @@ Set up a virtual environment and install package dependencies for successful com
 2. Activate environment with `conda activate gitRecommender`
 3. Install package dependencies with `pip install -r requirements.txt`
 4. Deactivate environment once done working with `conda deactivate`
+
+## Start Django
+Start Django development server with `python manage.py runserver`.
