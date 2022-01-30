@@ -1,4 +1,5 @@
 import React from 'react'
+import APIService from '../../APIService/APIService'
 
 
 //add props
@@ -9,6 +10,12 @@ function DataList(props){
         //notify app.js which article has been clicked
         props.editBtn(article)
 
+    }
+
+    const deleteBtn = (article) => {
+        APIService.DeleteArticle(article.id)
+        .then(() => props.deleteBtn(article))
+        .catch(error => console.log(error))
     }
 
 
@@ -27,7 +34,7 @@ function DataList(props){
                             <button className = "btn btn-primary" onClick = {() => editBtn(article)}>Update</button>
                             </div>
                             <div className = "col">
-                            <button className = "btn btn-danger">Delete</button>
+                            <button className = "btn btn-danger" onClick = {() => deleteBtn(article)}>Delete</button>
                             </div>
                             
                         </div>

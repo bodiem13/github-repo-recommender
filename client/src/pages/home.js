@@ -3,7 +3,7 @@ import Navbar from '../components/Navbar/Navbar';
 import SearchBar from '../components/SearchBar/SearchBar'
 import DataList from '../components/DataList/DataList'
 import Form from '../components/Form/Form'
-import { FaArrowAltCircleDown } from 'react-icons/fa';
+import { FaArrowAltCircleDown, FaSleigh } from 'react-icons/fa';
 
 const Home = () => {
     //creates my state and use state
@@ -46,16 +46,40 @@ const Home = () => {
         })
         setArticles(new_article)
     }
+
+    const articleForm = (repoUrl) => {
+        setEditArticle({title: '', description: ''})
+        console.log("Printing repoUrl from home page")
+        console.log(repoUrl)
+    }
+
+    const insertedInformation = (article) => {
+        const new_articles = [...articles, article]
+        setArticles(new_articles)
+    }
+
+    const deleteBtn = (article) => {
+        const new_articles = articles.filter(myarticle => {
+            if (myarticle.id === article.id){
+                return false
+            }
+            else {
+                return true
+            }
+        })
+
+        setArticles(new_articles)
+    }
     return(
         <div className="justify-center align-middle h-32">
             <Navbar />
             {/*To add data options to the search bar, add a second prop for data */}
-            <SearchBar placeholder = "Enter a GitHub Repository Url..."/>
+            <SearchBar placeholder = "Enter a GitHub Repository Url..." articleForm = {articleForm}/>
             <h1>Django responses</h1>
             {/*Send articles as prop to the DataList component*/}
-            <DataList articles = {articles} editBtn = {editBtn}/>
+            <DataList articles = {articles} editBtn = {editBtn} deleteBtn = {deleteBtn}/>
             {/*Check if we have anything in editArticle. If so, return form. Else null */}
-            {editArticle ? <Form article = {editArticle} updatedInformation = {updatedInformation}/>: null}
+            {editArticle ? <Form article = {editArticle} updatedInformation = {updatedInformation} insertedInformation = {insertedInformation}/>: null}
         </div> 
     );   
 };

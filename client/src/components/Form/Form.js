@@ -14,6 +14,11 @@ function Form(props){
         .then(resp => props.updatedInformation(resp))
     }
 
+    const insertArticle = () => {
+        APIService.InsertArticle({title, description})
+        .then(resp => props.insertedInformation(resp))
+    }
+
 
     return(
         <div>
@@ -29,7 +34,12 @@ function Form(props){
                 
                 </textarea>
                 <br/>
-                <button className = "btn btn-success" onClick = {updateArticle}>Update Article</button>
+                {
+                    props.article.id ?
+                    <button className = "btn btn-success" onClick = {updateArticle}>Update Article</button>
+                    : <button className = "btn btn-success" onClick = {insertArticle}>Insert Article</button>
+                }
+                
                 </div>
 
             ): null}
