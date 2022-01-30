@@ -3,10 +3,12 @@ import Navbar from '../components/Navbar/Navbar';
 import SearchBar from '../components/SearchBar/SearchBar'
 import DataList from '../components/DataList/DataList'
 import Form from '../components/Form/Form'
+import { FaArrowAltCircleDown } from 'react-icons/fa';
 
 const Home = () => {
     //creates my state and use state
     const [articles, setArticles] = useState([])
+
 
     const [editArticle, setEditArticle] = useState(null)
 
@@ -32,6 +34,18 @@ const Home = () => {
     const editBtn = (article) => {
         setEditArticle(article)
     }
+    
+    const updatedInformation = (article) => {
+        const new_article = articles.map(myarticle => {
+            if (myarticle.id === article.id){
+                return article;
+            }
+            else {
+                return myarticle;
+            }
+        })
+        setArticles(new_article)
+    }
     return(
         <div className="justify-center align-middle h-32">
             <Navbar />
@@ -40,7 +54,8 @@ const Home = () => {
             <h1>Django responses</h1>
             {/*Send articles as prop to the DataList component*/}
             <DataList articles = {articles} editBtn = {editBtn}/>
-            <Form article = {editArticle}/>
+            {/*Check if we have anything in editArticle. If so, return form. Else null */}
+            {editArticle ? <Form article = {editArticle} updatedInformation = {updatedInformation}/>: null}
         </div> 
     );   
 };
