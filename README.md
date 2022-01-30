@@ -3,8 +3,8 @@
     <h4 align="center">Recommendation system for improving maintainability and scalability of Github repositories. </h4>
 </p>
 <p align="center">
-    <a href="#"><img src="https://img.shields.io/badge/node-v12.18.3-blue"></a>
-    <a href="#"><img src="https://img.shields.io/badge/npm-v6.14.6-blue"></a>
+    <a href="#"><img src="https://img.shields.io/badge/node-v16.13.2-blue"></a>
+    <a href="#"><img src="https://img.shields.io/badge/npm-v8.1.2-blue"></a>
     <a href="#"><img src="https://img.shields.io/badge/python-v3.10.0-blue"></a>
     <a href="#"><img src="https://img.shields.io/badge/docker-v19.03.13-green"></a>
 </p>
