@@ -33,7 +33,7 @@ const Home = () => {
         setEditArticle(article)
     }
     return(
-        <div className="justify-center align-middle h-32 bg-stone-700">
+        <div className="justify-center align-middle h-32">
             <Navbar />
             {/*To add data options to the search bar, add a second prop for data */}
             <SearchBar placeholder = "Enter a GitHub Repository Url..."/>
