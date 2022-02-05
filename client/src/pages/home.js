@@ -48,7 +48,7 @@ const Home = () => {
     }
 
     const articleForm = (repoUrl) => {
-        setEditArticle({title: '', description: ''})
+        //setEditArticle({title: '', description: ''})
         console.log("Printing repoUrl from home page")
         console.log(repoUrl)
     }
@@ -74,7 +74,7 @@ const Home = () => {
         <div className="justify-center align-middle h-32">
             <Navbar />
             {/*To add data options to the search bar, add a second prop for data */}
-            <SearchBar placeholder = "Enter a GitHub Repository Url..." articleForm = {articleForm}/>
+            <SearchBar placeholder = "Enter a GitHub Repository Url..." articleForm = {articleForm} insertedInformation = {insertedInformation}/>
             <h1>Django responses</h1>
             {/*Send articles as prop to the DataList component*/}
             <DataList articles = {articles} editBtn = {editBtn} deleteBtn = {deleteBtn}/>

@@ -1,5 +1,7 @@
 import React, {useState} from 'react'
 import { SearchIcon } from '@heroicons/react/solid'
+import APIService from '../../APIService/APIService'
+import axios from 'axios';
 
 //props of placeholder and repoUrl are passed to the component
 const SearchBar = (props) => {
@@ -18,8 +20,27 @@ const SearchBar = (props) => {
         console.log(repoUrl);
         props.articleForm(repoUrl)
         const userMessage = "The following user input has been handled: " + repoUrl
+        const mySplitUrl = repoUrl.split("github.com/")
+        let apiEnd = mySplitUrl[1]
+        const apiUrl = "https://api.github.com/repos/" + apiEnd
+        console.log(apiUrl)
+        fetch(apiUrl)
+        .then(res => res.json())
+        .then(data => {
+            return data
+        })
+        const title = repoUrl
+        const description = apiUrl
+        console.log(typeof data);
+        APIService.InsertArticle({title, description})
+        .then(resp => props.insertedInformation(resp))
+
         setUserEnteredUrl(<p style={{textAlign: "left"}}>{userMessage}</p>)
     }
+    // const insertArticle = () => {
+    //     APIService.InsertArticle({title, description})
+    //     .then(resp => props.insertedInformation(resp))
+    // }
     return(
         <div>
             <div className="flex items-center justify-center pt-6">
