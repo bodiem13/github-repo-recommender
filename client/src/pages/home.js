@@ -75,11 +75,11 @@ const Home = () => {
             <Navbar />
             {/*To add data options to the search bar, add a second prop for data */}
             <SearchBar placeholder = "Enter a GitHub Repository Url..." articleForm = {articleForm} insertedInformation = {insertedInformation}/>
-            <h1>Django responses</h1>
+            {/*<h1>Django responses</h1>*/}
             {/*Send articles as prop to the DataList component*/}
-            <DataList articles = {articles} editBtn = {editBtn} deleteBtn = {deleteBtn}/>
+            {/*<DataList articles = {articles} editBtn = {editBtn} deleteBtn = {deleteBtn}/>*/}
             {/*Check if we have anything in editArticle. If so, return form. Else null */}
-            {editArticle ? <Form article = {editArticle} updatedInformation = {updatedInformation} insertedInformation = {insertedInformation}/>: null}
+            {/*{editArticle ? <Form article = {editArticle} updatedInformation = {updatedInformation} insertedInformation = {insertedInformation}/>: null}*/}
         </div> 
     );   
 };
