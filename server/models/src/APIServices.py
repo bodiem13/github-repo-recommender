@@ -6,7 +6,7 @@ class githubAPIServices:
     def __init__(self):
         self.api_url = 'https://api.github.com/'
         #self.api_token = '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'
-        self.api_token = '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'
+        
         self.headers = {'Authorization': 'token %s' % self.api_token}
 
     def getRepositoriesByStars(self, numRepos):
@@ -35,9 +35,19 @@ class githubAPIServices:
                 json.dump(repoInfo, f)
             num_branches = len(repoInfo)
             #check commits
-            repoInfo = requests.get(self.api_url + 'repos/'+owner+'/'+repoName+'/commits').json()
-            with open('server/models/src/data.json', 'w') as f:
-                json.dump(repoInfo, f)
+            my_iterator = 1
+            num_commits = 0
+            while True:
+                repoInfo = requests.get(self.api_url + 'repos/'+owner+'/'+repoName+'/commits?page=' + str(my_iterator)).json()
+                if len(repoInfo) != 0:
+                    num_commits += len(repoInfo)
+                    my_iterator += 1
+                else:
+                    break
+                # with open('server/models/src/data.json', 'w') as f:
+                #     json.dump(repoInfo, f)
+            
+            print("Total commits: ", num_commits)
             
             #stars = repoInfo.json()['stargazers_count']
             print("Done")
