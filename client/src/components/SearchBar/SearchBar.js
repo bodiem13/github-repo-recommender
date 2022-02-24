@@ -27,11 +27,20 @@ const SearchBar = (props) => {
         fetch(apiUrl)
         .then(res => res.json())
         .then(data => {
+            console.log(typeof(data))
+            setUserEnteredUrl(
+                <div>
+                    <h1 style={{textAlign: "left"}}>{data['full_name']}</h1>
+                    <p style={{textAlign: "left"}}>{"Number of forks: " + data['forks_count']}</p>
+                    <p style={{textAlign: "left"}}>{"Number of open issues: " + data['open_issues']}</p>
+                    <p style={{textAlign: "left"}}>{"Number of watchers: " + data['watchers_count']}</p>
+                </div>
+                )
+            console.log(data);
             return data
         })
         const title = repoUrl
         const description = apiUrl
-        console.log(typeof data);
         APIService.InsertArticle({title, description})
         .then(resp => props.insertedInformation(resp))
 
