@@ -1,6 +1,7 @@
 import requests
 import json
 import pandas as pd
+from csv import writer
 
 class githubAPIServices:
 
@@ -15,6 +16,9 @@ class githubAPIServices:
         self.df_headers = []
         self.getDfHeaders()
         self.df = pd.DataFrame(columns = self.df_headers)
+        self.rate_limit_remaining = 0
+        self.row = []
+        self.counter = 0
     
     def getDfHeaders(self):
         self.df_headers.append('repoName')
@@ -22,50 +26,62 @@ class githubAPIServices:
         for key in self.df_elements.keys():
             self.df_headers.append(key)
         self.df_headers.append('num_branches')
-        self.df_headers.append('num_commits')
+        #self.df_headers.append('num_commits')
+    
+    def exportToCsv(self):
+        self.df.to_csv('repoData.csv')
 
-        
+    def checkRateLimit(self):
+        response = requests.get('https://api.github.com/rate_limit', headers=self.headers).json()
+        self.rate_limit_remaining = response['resources']['core']['remaining']  
 
     def getRepositoriesByStars(self, numRepos):
+        self.checkRateLimit()
+        #check rate limit to ensure 4 api calls can be made
+        print("Remaining rate limit: ", self.rate_limit_remaining)
+
         repos = requests.get(self.api_url+'repositories?sort=stars&order=desc', headers=self.headers).json()
-        print(len(repos))
         for repo in repos:
-            row = []
-            repoName = repo['name']
-            owner = repo['owner']['login'] 
-            repoInfo = requests.get(self.api_url + 'repos/'+owner+'/'+repoName).json()
-            with open('server/models/src/data.json', 'w') as f:
-                json.dump(repoInfo, f)
-            for value in self.df_elements.values():
-                row.append(eval(value))
-            repoInfo = requests.get(self.api_url + 'repos/'+owner+'/'+repoName+'/branches').json()
-            with open('server/models/src/data.json', 'w') as f:
-                json.dump(repoInfo, f)
-            num_branches = len(repoInfo)
-            row.append(num_branches)
-            #check commits
-            my_iterator = 1
-            num_commits = 0
-            while True:
-                repoInfo = requests.get(self.api_url + 'repos/'+owner+'/'+repoName+'/commits?page=' + str(my_iterator)).json()
-                if len(repoInfo) != 0:
-                    num_commits += len(repoInfo)
-                    my_iterator += 1
-                else:
-                    break
-                # with open('server/models/src/data.json', 'w') as f:
-                #     json.dump(repoInfo, f)
-            
-            print("Total commits: ", num_commits)
-            row.append(num_commits)
-            print(row)
-            print(len(row))
-            self.df.loc[len(self.df)] = row
-            print(self.df)
-            #stars = repoInfo.json()['stargazers_count']
-            print("Done")
+            if self.counter < numRepos:
+                try:
+                    self.row = []
+                    repoName = repo['name']
+                    self.row.append(repoName)
+                    owner = repo['owner']['login'] 
+                    self.row.append(owner)
+                    repoInfo = requests.get(self.api_url + 'repos/'+owner+'/'+repoName, headers=self.headers).json()
+                    if repoInfo['watchers_count'] > 500: 
+                        for value in self.df_elements.values():
+                            self.row.append(eval(value))
+                        repoInfo = requests.get(self.api_url + 'repos/'+owner+'/'+repoName+'/branches', headers=self.headers).json()
+                        #append number of branches by getting len of repoInfo
+                        self.row.append(len(repoInfo))
+
+                        #COMMENTED OUT NUM COMMITS
+                        # #check commits
+                        # my_iterator = 1
+                        # num_commits = 0
+                        # while True:
+                        #     repoInfo = requests.get(self.api_url + 'repos/'+owner+'/'+repoName+'/commits?page=' + str(my_iterator), headers=self.headers).json()
+                        #     if len(repoInfo) != 0:
+                        #         num_commits += len(repoInfo)
+                        #         my_iterator += 1
+                        #     else:
+                        #         break
+                        # #add total num commits as calculated value
+                        # self.row.append(num_commits)
+                        #add row to df
+                        self.df.loc[len(self.df)] = self.row
+                        self.counter += 1
+                    else:
+                        print("Not enough Stars! We only had " + str(repoInfo['watchers_count']))
+                except Exception as err:
+                    print("The below exception has occurred")
+                    print(err)
+            else:
+                break
             
 
 githubAPIServices = githubAPIServices()
-githubAPIServices.getRepositoriesByStars(5)
-githubAPIServices.getDfHeaders()
+githubAPIServices.getRepositoriesByStars(5000)
+githubAPIServices.exportToCsv()
