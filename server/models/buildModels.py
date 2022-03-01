@@ -9,7 +9,10 @@ from sklearn.model_selection import train_test_split
 import statsmodels.api as sm
 import numpy as np
 from sklearn.metrics import r2_score
-from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import LinearRegression, LogisticRegression
+from sklearn.ensemble import RandomForestClassifier as RFC
+from sklearn.metrics import accuracy_score
+from sklearn.neighbors import KNeighborsClassifier
 
 class buildModels:
     def __init__(self):
@@ -75,11 +78,28 @@ class buildModels:
         print(r2_score(y_train,y_train_pred))
         print(r2_score(y_test,y_test_pred))
 
-
     def linearRegression(self):
         X_train, X_test, y_train, y_test = self.getDataSets()
         self.buildLinRegStatsmodels(X_train, X_test, y_train, y_test)
         self.buildLinRegSklearn(X_train, X_test, y_train, y_test)
+        return
+
+    def randomForest(self):
+        X_train, X_test, y_train, y_test = self.getDataSets()
+        rfc_b = RFC()
+        rfc_b.fit(X_train,y_train)
+        y_pred = rfc_b.predict(X_train)
+        print('Train accuracy score:',accuracy_score(y_train,y_pred))
+        print('Test accuracy score:', accuracy_score(y_test,rfc_b.predict(X_test)))
+        return
+    
+    def kNNeighbors(self):
+        X_train, X_test, y_train, y_test = self.getDataSets()
+        knn = KNeighborsClassifier()
+        knn.fit(X_train,y_train)
+        y_pred = knn.predict(X_train)
+        print('Train accuracy score:',accuracy_score(y_train,y_pred))
+        print('Test accuracy score:',accuracy_score(y_test,knn.predict(X_test)))
         return
 
     def main(self):
@@ -87,6 +107,8 @@ class buildModels:
         self.getDataInfo()
         #self.showDataTrends()
         self.linearRegression()
+        self.randomForest()
+        self.kNNeighbors()
 
 buildModels = buildModels()
 buildModels.main()
