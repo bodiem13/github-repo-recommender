@@ -1,6 +1,5 @@
 import requests
 import json
-import pandas as pd
 import csv
 
 class githubAPIServices:
@@ -12,7 +11,7 @@ class githubAPIServices:
         self.df_elements = {'size': "repoInfo['size']", 'watchers_count': "repoInfo['watchers_count']", 'has_issues': "repoInfo['has_issues']", 'has_wiki': "repoInfo['has_wiki']", 
         'has_pages': "repoInfo['has_pages']", 'has_projects': "repoInfo['has_projects']", 'forks_count': "repoInfo['forks_count']", 'open_issues_count': "repoInfo['open_issues_count']",
         'subscribers_count': "repoInfo['subscribers_count']", 'is_template': "repoInfo['is_template']", 'num_topics': "len(repoInfo['topics'])"}
-        self.headers = []
+        self.csv_headers = []
         self.getHeaders()
         self.rate_limit_remaining = 0
         self.row = []
@@ -27,15 +26,15 @@ class githubAPIServices:
     
     #get headers for columns of exported csv file
     def getHeaders(self):
-        self.headers.append('repoName')
-        self.headers.append('owner')
+        self.csv_headers.append('repoName')
+        self.csv_headers.append('owner')
         for key in self.df_elements.keys():
-            self.headers.append(key)
-        self.headers.append('num_branches')
+            self.csv_headers.append(key)
+        self.csv_headers.append('num_branches')
         #uncomment to add headers to the top of csv file
         # with open('repoData.csv','w') as file:
         #     write = csv.writer(file)
-        #     write.writerow(self.headers)
+        #     write.writerow(self.csv_headers)
     
     #export row with repository details to csv
     def exportToCsv(self):
@@ -64,13 +63,12 @@ class githubAPIServices:
             self.row.append(len(repoInfo))
             self.counter += 1
             self.exportToCsv()
-
         except Exception as err:
             print("The below exception has occurred")
             print(err)
 
     #get repository details by the number of stars a repository has
-    def getRepositoriesByStars(self, numRepos, page, num_stars):
+    def getRepositoriesByStars(self, page, num_stars):
         self.checkRateLimit()
         #check rate limit to ensure 4 api calls can be made
         print("Remaining rate limit: ", self.rate_limit_remaining)
@@ -82,13 +80,18 @@ class githubAPIServices:
         try:
             for repo in repos['items']:
                 self.getRepoDetails(repo)
+            return True
         except Exception as err:
             print("The following error occurred getting repo data: ", err)
+            return False
+
             
 
 githubAPIServices = githubAPIServices()
-i = 0
-num_stars = [500, 1000, 1500, 2000, 10000]
-while i < 100:
-    githubAPIServices.getRepositoriesByStars(5000, i, 1000)
-    i+= 1
+i = 1
+num_stars = [500, 1000, 2000, 10000, 25000]
+for star_count in num_stars:
+    more_pages = True
+    while more_pages == True:
+        more_pages = githubAPIServices.getRepositoriesByStars(i, star_count)
+        i+= 1
