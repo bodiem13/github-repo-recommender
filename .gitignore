@@ -4,3 +4,4 @@ scripts/flow/*/.flowconfig
 .flowconfig
 __pycache__/
 config.json
+*.csv
