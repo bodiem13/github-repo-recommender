@@ -1,14 +1,13 @@
 import requests
 import json
 import pandas as pd
-from csv import writer
+import csv
 
 class githubAPIServices:
 
     def __init__(self):
         self.api_url = 'https://api.github.com/'
-        #self.api_token = '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'
-        
+        self.api_token = self.get_git_token()
         self.headers = {'Authorization': 'token %s' % self.api_token}
         self.df_elements = {'size': "repoInfo['size']", 'watchers_count': "repoInfo['watchers_count']", 'has_issues': "repoInfo['has_issues']", 'has_wiki': "repoInfo['has_wiki']", 
         'has_pages': "repoInfo['has_pages']", 'has_projects': "repoInfo['has_projects']", 'forks_count': "repoInfo['forks_count']", 'open_issues_count': "repoInfo['open_issues_count']",
@@ -20,28 +19,44 @@ class githubAPIServices:
         self.row = []
         self.counter = 0
     
+    def get_git_token(self):
+        with open('config.json') as f:
+            data = json.load(f)
+            my_token = data['api_token']
+            return my_token
+    
     def getDfHeaders(self):
         self.df_headers.append('repoName')
         self.df_headers.append('owner')
         for key in self.df_elements.keys():
             self.df_headers.append(key)
         self.df_headers.append('num_branches')
+        # with open('repoData.csv','w') as file:
+        #     write = csv.writer(file)
+        #     write.writerow(self.df_headers)
+
         #self.df_headers.append('num_commits')
     
     def exportToCsv(self):
-        self.df.to_csv('repoData.csv')
+        with open('repoData.csv','a+', newline='') as file:
+            write = csv.writer(file)
+            write.writerow(self.row)
+        # self.df.to_csv('repoData.csv')
 
     def checkRateLimit(self):
         response = requests.get('https://api.github.com/rate_limit', headers=self.headers).json()
         self.rate_limit_remaining = response['resources']['core']['remaining']  
 
-    def getRepositoriesByStars(self, numRepos):
+    def getRepositoriesByStars(self, numRepos, page):
         self.checkRateLimit()
         #check rate limit to ensure 4 api calls can be made
         print("Remaining rate limit: ", self.rate_limit_remaining)
-
-        repos = requests.get(self.api_url+'repositories?sort=stars&order=desc', headers=self.headers).json()
-        for repo in repos:
+        # https://api.github.com/search/repositories?q=stars:>500&sort=stars&order=desc&page=3
+        my_url = self.api_url+'search/repositories?q=stars:>1000&sort=stars&order=asc'+'&page='+str(page)
+        print(my_url)
+        repos = requests.get(my_url, headers=self.headers).json()
+        #print(repos)
+        for repo in repos['items']:
             if self.counter < numRepos:
                 try:
                     self.row = []
@@ -73,6 +88,7 @@ class githubAPIServices:
                         #add row to df
                         self.df.loc[len(self.df)] = self.row
                         self.counter += 1
+                        self.exportToCsv()
                     else:
                         print("Not enough Stars! We only had " + str(repoInfo['watchers_count']))
                 except Exception as err:
@@ -83,5 +99,8 @@ class githubAPIServices:
             
 
 githubAPIServices = githubAPIServices()
-githubAPIServices.getRepositoriesByStars(5000)
-githubAPIServices.exportToCsv()
+num_pages = 100
+i = 0
+while i < 100:
+    githubAPIServices.getRepositoriesByStars(5000, i)
+    i+= 1
