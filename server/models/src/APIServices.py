@@ -1,71 +1,102 @@
 import requests
 import json
-import pandas as pd
+import csv
 
 class githubAPIServices:
 
     def __init__(self):
         self.api_url = 'https://api.github.com/'
-        #self.api_token = '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'
-        
+        self.api_token = self.getGitToken()
         self.headers = {'Authorization': 'token %s' % self.api_token}
         self.df_elements = {'size': "repoInfo['size']", 'watchers_count': "repoInfo['watchers_count']", 'has_issues': "repoInfo['has_issues']", 'has_wiki': "repoInfo['has_wiki']", 
         'has_pages': "repoInfo['has_pages']", 'has_projects': "repoInfo['has_projects']", 'forks_count': "repoInfo['forks_count']", 'open_issues_count': "repoInfo['open_issues_count']",
         'subscribers_count': "repoInfo['subscribers_count']", 'is_template': "repoInfo['is_template']", 'num_topics': "len(repoInfo['topics'])"}
-        self.df_headers = []
-        self.getDfHeaders()
-        self.df = pd.DataFrame(columns = self.df_headers)
+        self.csv_headers = []
+        self.getHeaders()
+        self.rate_limit_remaining = 0
+        self.row = []
+        self.counter = 0
     
-    def getDfHeaders(self):
-        self.df_headers.append('repoName')
-        self.df_headers.append('owner')
+    #get api_token needed for git authentication
+    def getGitToken(self):
+        with open('config.json') as f:
+            data = json.load(f)
+            my_token = data['api_token']
+            return my_token
+    
+    #get headers for columns of exported csv file
+    def getHeaders(self):
+        self.csv_headers.append('repoName')
+        self.csv_headers.append('owner')
         for key in self.df_elements.keys():
-            self.df_headers.append(key)
-        self.df_headers.append('num_branches')
-        self.df_headers.append('num_commits')
+            self.csv_headers.append(key)
+        self.csv_headers.append('num_branches')
+        #uncomment to add headers to the top of csv file
+        # with open('repoData.csv','w') as file:
+        #     write = csv.writer(file)
+        #     write.writerow(self.csv_headers)
+    
+    #export row with repository details to csv
+    def exportToCsv(self):
+        with open('server/models/src/data/repoData.csv','a+', newline='') as file:
+            write = csv.writer(file)
+            write.writerow(self.row)
 
-        
+    #helper function for checking api rate limit
+    def checkRateLimit(self):
+        response = requests.get('https://api.github.com/rate_limit', headers=self.headers).json()
+        self.rate_limit_remaining = response['resources']['core']['remaining']  
 
-    def getRepositoriesByStars(self, numRepos):
-        repos = requests.get(self.api_url+'repositories?sort=stars&order=desc', headers=self.headers).json()
-        print(len(repos))
-        for repo in repos:
-            row = []
+    
+    def getRepoDetails(self, repo):
+        try:
+            self.row = []
             repoName = repo['name']
+            self.row.append(repoName)
             owner = repo['owner']['login'] 
-            repoInfo = requests.get(self.api_url + 'repos/'+owner+'/'+repoName).json()
-            with open('server/models/src/data.json', 'w') as f:
-                json.dump(repoInfo, f)
+            self.row.append(owner)
+            repoInfo = requests.get(self.api_url + 'repos/'+owner+'/'+repoName, headers=self.headers).json()
             for value in self.df_elements.values():
-                row.append(eval(value))
-            repoInfo = requests.get(self.api_url + 'repos/'+owner+'/'+repoName+'/branches').json()
-            with open('server/models/src/data.json', 'w') as f:
-                json.dump(repoInfo, f)
-            num_branches = len(repoInfo)
-            row.append(num_branches)
-            #check commits
-            my_iterator = 1
-            num_commits = 0
-            while True:
-                repoInfo = requests.get(self.api_url + 'repos/'+owner+'/'+repoName+'/commits?page=' + str(my_iterator)).json()
-                if len(repoInfo) != 0:
-                    num_commits += len(repoInfo)
-                    my_iterator += 1
+                self.row.append(eval(value))
+            repoInfo = requests.get(self.api_url + 'repos/'+owner+'/'+repoName+'/branches', headers=self.headers).json()
+            #append number of branches by getting len of repoInfo
+            self.row.append(len(repoInfo))
+            self.counter += 1
+            self.exportToCsv()
+            return True
+        except Exception as err:
+            print("The below exception has occurred")
+            print(err)
+            return False
+
+    #get repository details by the number of stars a repository has
+    def getRepositoriesByStars(self, page, num_stars):
+        self.checkRateLimit()
+        #check rate limit to ensure 4 api calls can be made
+        print("Remaining rate limit: ", self.rate_limit_remaining)
+        my_url = self.api_url+'search/repositories?q=stars:>'+str(num_stars)+'&sort=stars&order=asc'+'&page='+str(page)
+        print(my_url)
+        try:
+            repos = requests.get(my_url, headers=self.headers).json()
+            keep_going = True
+            for repo in repos['items']:
+                if keep_going == True:
+                    keep_going = self.getRepoDetails(repo)
                 else:
                     break
-                # with open('server/models/src/data.json', 'w') as f:
-                #     json.dump(repoInfo, f)
-            
-            print("Total commits: ", num_commits)
-            row.append(num_commits)
-            print(row)
-            print(len(row))
-            self.df.loc[len(self.df)] = row
-            print(self.df)
-            #stars = repoInfo.json()['stargazers_count']
-            print("Done")
+            return True
+        except Exception as err:
+            print("The following error occurred getting repo data: ", err)
+            return False
+
             
 
 githubAPIServices = githubAPIServices()
-githubAPIServices.getRepositoriesByStars(5)
-githubAPIServices.getDfHeaders()
+page_num = 1
+num_stars = [500, 1000, 2000, 10000, 25000, 40000]
+for star_count in num_stars:
+    page_num = 1
+    more_pages = True
+    while more_pages == True:
+        more_pages = githubAPIServices.getRepositoriesByStars(page_num, star_count)
+        page_num+= 1
