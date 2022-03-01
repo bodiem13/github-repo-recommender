@@ -18,12 +18,14 @@ class githubAPIServices:
         self.row = []
         self.counter = 0
     
+    #get api_token needed for git authentication
     def getGitToken(self):
         with open('config.json') as f:
             data = json.load(f)
             my_token = data['api_token']
             return my_token
     
+    #get headers for columns of exported csv file
     def getHeaders(self):
         self.headers.append('repoName')
         self.headers.append('owner')
@@ -34,71 +36,59 @@ class githubAPIServices:
         # with open('repoData.csv','w') as file:
         #     write = csv.writer(file)
         #     write.writerow(self.headers)
-
-        #uncomment if adding num_commits to repo data
-        #self.headers.append('num_commits')
     
+    #export row with repository details to csv
     def exportToCsv(self):
         with open('repoData.csv','a+', newline='') as file:
             write = csv.writer(file)
             write.writerow(self.row)
 
+    #helper function for checking api rate limit
     def checkRateLimit(self):
         response = requests.get('https://api.github.com/rate_limit', headers=self.headers).json()
         self.rate_limit_remaining = response['resources']['core']['remaining']  
 
-    def getRepositoriesByStars(self, numRepos, page):
+    
+    def getRepoDetails(self, repo):
+        try:
+            self.row = []
+            repoName = repo['name']
+            self.row.append(repoName)
+            owner = repo['owner']['login'] 
+            self.row.append(owner)
+            repoInfo = requests.get(self.api_url + 'repos/'+owner+'/'+repoName, headers=self.headers).json()
+            for value in self.df_elements.values():
+                self.row.append(eval(value))
+            repoInfo = requests.get(self.api_url + 'repos/'+owner+'/'+repoName+'/branches', headers=self.headers).json()
+            #append number of branches by getting len of repoInfo
+            self.row.append(len(repoInfo))
+            self.counter += 1
+            self.exportToCsv()
+
+        except Exception as err:
+            print("The below exception has occurred")
+            print(err)
+
+    #get repository details by the number of stars a repository has
+    def getRepositoriesByStars(self, numRepos, page, num_stars):
         self.checkRateLimit()
         #check rate limit to ensure 4 api calls can be made
         print("Remaining rate limit: ", self.rate_limit_remaining)
         # https://api.github.com/search/repositories?q=stars:>500&sort=stars&order=desc&page=3
-        my_url = self.api_url+'search/repositories?q=stars:>1000&sort=stars&order=asc'+'&page='+str(page)
+        my_url = self.api_url+'search/repositories?q=stars:>'+str(num_stars)+'&sort=stars&order=asc'+'&page='+str(page)
         print(my_url)
         repos = requests.get(my_url, headers=self.headers).json()
         #print(repos)
-        for repo in repos['items']:
-            if self.counter < numRepos:
-                try:
-                    self.row = []
-                    repoName = repo['name']
-                    self.row.append(repoName)
-                    owner = repo['owner']['login'] 
-                    self.row.append(owner)
-                    repoInfo = requests.get(self.api_url + 'repos/'+owner+'/'+repoName, headers=self.headers).json()
-                    if repoInfo['watchers_count'] > 500: 
-                        for value in self.df_elements.values():
-                            self.row.append(eval(value))
-                        repoInfo = requests.get(self.api_url + 'repos/'+owner+'/'+repoName+'/branches', headers=self.headers).json()
-                        #append number of branches by getting len of repoInfo
-                        self.row.append(len(repoInfo))
-
-                        #COMMENTED OUT NUM COMMITS
-                        # #check commits
-                        # my_iterator = 1
-                        # num_commits = 0
-                        # while True:
-                        #     repoInfo = requests.get(self.api_url + 'repos/'+owner+'/'+repoName+'/commits?page=' + str(my_iterator), headers=self.headers).json()
-                        #     if len(repoInfo) != 0:
-                        #         num_commits += len(repoInfo)
-                        #         my_iterator += 1
-                        #     else:
-                        #         break
-                        # #add total num commits as calculated value
-                        # self.row.append(num_commits)
-                        self.counter += 1
-                        self.exportToCsv()
-                    else:
-                        print("Not enough Stars! We only had " + str(repoInfo['watchers_count']))
-                except Exception as err:
-                    print("The below exception has occurred")
-                    print(err)
-            else:
-                break
+        try:
+            for repo in repos['items']:
+                self.getRepoDetails(repo)
+        except Exception as err:
+            print("The following error occurred getting repo data: ", err)
             
 
 githubAPIServices = githubAPIServices()
-num_pages = 100
 i = 0
+num_stars = [500, 1000, 1500, 2000, 10000]
 while i < 100:
-    githubAPIServices.getRepositoriesByStars(5000, i)
+    githubAPIServices.getRepositoriesByStars(5000, i, 1000)
     i+= 1
