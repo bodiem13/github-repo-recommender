@@ -7,41 +7,41 @@ class githubAPIServices:
 
     def __init__(self):
         self.api_url = 'https://api.github.com/'
-        self.api_token = self.get_git_token()
+        self.api_token = self.getGitToken()
         self.headers = {'Authorization': 'token %s' % self.api_token}
         self.df_elements = {'size': "repoInfo['size']", 'watchers_count': "repoInfo['watchers_count']", 'has_issues': "repoInfo['has_issues']", 'has_wiki': "repoInfo['has_wiki']", 
         'has_pages': "repoInfo['has_pages']", 'has_projects': "repoInfo['has_projects']", 'forks_count': "repoInfo['forks_count']", 'open_issues_count': "repoInfo['open_issues_count']",
         'subscribers_count': "repoInfo['subscribers_count']", 'is_template': "repoInfo['is_template']", 'num_topics': "len(repoInfo['topics'])"}
-        self.df_headers = []
-        self.getDfHeaders()
-        self.df = pd.DataFrame(columns = self.df_headers)
+        self.headers = []
+        self.getHeaders()
         self.rate_limit_remaining = 0
         self.row = []
         self.counter = 0
     
-    def get_git_token(self):
+    def getGitToken(self):
         with open('config.json') as f:
             data = json.load(f)
             my_token = data['api_token']
             return my_token
     
-    def getDfHeaders(self):
-        self.df_headers.append('repoName')
-        self.df_headers.append('owner')
+    def getHeaders(self):
+        self.headers.append('repoName')
+        self.headers.append('owner')
         for key in self.df_elements.keys():
-            self.df_headers.append(key)
-        self.df_headers.append('num_branches')
+            self.headers.append(key)
+        self.headers.append('num_branches')
+        #uncomment to add headers to the top of csv file
         # with open('repoData.csv','w') as file:
         #     write = csv.writer(file)
-        #     write.writerow(self.df_headers)
+        #     write.writerow(self.headers)
 
-        #self.df_headers.append('num_commits')
+        #uncomment if adding num_commits to repo data
+        #self.headers.append('num_commits')
     
     def exportToCsv(self):
         with open('repoData.csv','a+', newline='') as file:
             write = csv.writer(file)
             write.writerow(self.row)
-        # self.df.to_csv('repoData.csv')
 
     def checkRateLimit(self):
         response = requests.get('https://api.github.com/rate_limit', headers=self.headers).json()
@@ -85,8 +85,6 @@ class githubAPIServices:
                         #         break
                         # #add total num commits as calculated value
                         # self.row.append(num_commits)
-                        #add row to df
-                        self.df.loc[len(self.df)] = self.row
                         self.counter += 1
                         self.exportToCsv()
                     else:
