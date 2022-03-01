@@ -38,7 +38,7 @@ class githubAPIServices:
     
     #export row with repository details to csv
     def exportToCsv(self):
-        with open('repoData.csv','a+', newline='') as file:
+        with open('server/models/src/data/repoData.csv','a+', newline='') as file:
             write = csv.writer(file)
             write.writerow(self.row)
 
@@ -63,23 +63,27 @@ class githubAPIServices:
             self.row.append(len(repoInfo))
             self.counter += 1
             self.exportToCsv()
+            return True
         except Exception as err:
             print("The below exception has occurred")
             print(err)
+            return False
 
     #get repository details by the number of stars a repository has
     def getRepositoriesByStars(self, page, num_stars):
         self.checkRateLimit()
         #check rate limit to ensure 4 api calls can be made
         print("Remaining rate limit: ", self.rate_limit_remaining)
-        # https://api.github.com/search/repositories?q=stars:>500&sort=stars&order=desc&page=3
         my_url = self.api_url+'search/repositories?q=stars:>'+str(num_stars)+'&sort=stars&order=asc'+'&page='+str(page)
         print(my_url)
-        repos = requests.get(my_url, headers=self.headers).json()
-        #print(repos)
         try:
+            repos = requests.get(my_url, headers=self.headers).json()
+            keep_going = True
             for repo in repos['items']:
-                self.getRepoDetails(repo)
+                if keep_going == True:
+                    keep_going = self.getRepoDetails(repo)
+                else:
+                    break
             return True
         except Exception as err:
             print("The following error occurred getting repo data: ", err)
@@ -88,10 +92,11 @@ class githubAPIServices:
             
 
 githubAPIServices = githubAPIServices()
-i = 1
-num_stars = [500, 1000, 2000, 10000, 25000]
+page_num = 1
+num_stars = [500, 1000, 2000, 10000, 25000, 40000]
 for star_count in num_stars:
+    page_num = 1
     more_pages = True
     while more_pages == True:
-        more_pages = githubAPIServices.getRepositoriesByStars(i, star_count)
-        i+= 1
+        more_pages = githubAPIServices.getRepositoriesByStars(page_num, star_count)
+        page_num+= 1
