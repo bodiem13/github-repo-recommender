@@ -4,12 +4,12 @@ import { FaGithub } from 'react-icons/fa';
 //Navbar for navigation to additional pages and back to home screen
 const Navbar = () => {
     //list of navbar tabs to loop through when creating hyperlink tags
-    const navbarTabs = ['Results', 'About']
+    const navbarTabs = ['Results', 'Contact']
     const navbarTabsTags = []
 
     for (let tab of navbarTabs) {
         const tabLink = "/"+tab;
-        navbarTabsTags.push(<a className="flex items-center no-underline h-full cursor-pointer px-4 py-0 text-white hover:text-gray-400" href={tabLink}>{tab}</a>)
+        navbarTabsTags.push(<a className="flex items-center no-underline h-full cursor-pointer px-4 py-0 text-white hover:underline" href={tabLink}>{tab}</a>)
     }
     return(
         <div>
