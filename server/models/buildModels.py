@@ -16,7 +16,14 @@ from sklearn.neighbors import KNeighborsClassifier
 
 class buildModels:
     def __init__(self):
-        df = pd.DataFrame()
+        self.df = pd.DataFrame()
+        self.lin_reg_train_acc = []
+        self.knn_train_acc = []
+        self.rf_train_acc = []
+        self.lin_reg_test_acc = []
+        self.knn_test_acc = []
+        self.rf_test_acc = []
+        self.rand_state_var = 100
     
     #read csv data into dataframe
     def readCsvData(self):
@@ -48,8 +55,18 @@ class buildModels:
             'subscribers_count', 'is_template', 'num_topics', 'num_branches']]
         y = self.df['watchers_count']
         X_train, X_test, y_train, y_test = train_test_split(X, y, train_size = 0.7, 
-                                                    test_size = 0.3, random_state = 100)
+                                                    test_size = 0.3, random_state = self.rand_state_var)
+        self.rand_state_var += 1
 
+
+        return X_train, X_test, y_train, y_test
+    
+    def linRegRemoveCols(self, X_train, X_test, y_train, y_test):
+        print(X_train)
+        X_train = X_train.drop(columns=["size", "has_pages", "is_template"])
+        X_test = X_test.drop(columns=["size", "has_pages", "is_template"])
+        print("Done")
+        print(X_train)
         return X_train, X_test, y_train, y_test
     
     def buildLinRegStatsmodels(self, X_train, X_test, y_train, y_test):
@@ -59,11 +76,20 @@ class buildModels:
         print(lr.params)
         print("Below is summary")
         print(lr.summary())
+        X_train, X_test, y_train, y_test = self.linRegRemoveCols(X_train, X_test, y_train, y_test)
+        X_train_sm = sm.add_constant(X_train)
+        lr = sm.OLS(y_train, X_train_sm).fit()
+        print("Below are params after tuning")
+        print(lr.params)
+        print("Below is summary after tuning")
+        y_train_pred = lr.predict(X_train_sm)
         X_test_sm = sm.add_constant(X_test)
         y_test_pred = lr.predict(X_test_sm)
         print("Prediction: ", y_test_pred)
         r_squared = r2_score(y_test, y_test_pred)
         print("r-squared value: ", r_squared)
+        self.lin_reg_train_acc.append(r2_score(y_train,y_train_pred))
+        self.lin_reg_test_acc.append(r2_score(y_test,y_test_pred))
     
     def buildLinRegSklearn(self, X_train, X_test, y_train, y_test):
         X_train.shape
@@ -75,13 +101,15 @@ class buildModels:
         y_train_pred = lm.predict(X_train)
         y_test_pred = lm.predict(X_test)
 
-        print(r2_score(y_train,y_train_pred))
-        print(r2_score(y_test,y_test_pred))
+        print("Train accuracy score for Linear Regression:", r2_score(y_train,y_train_pred))
+        print("Testing accuracy score for Linear Regression:", r2_score(y_test,y_test_pred))
+        self.lin_reg_train_acc.append(r2_score(y_train,y_train_pred))
+        self.lin_reg_test_acc.append(r2_score(y_test,y_test_pred))
 
     def linearRegression(self):
         X_train, X_test, y_train, y_test = self.getDataSets()
         self.buildLinRegStatsmodels(X_train, X_test, y_train, y_test)
-        self.buildLinRegSklearn(X_train, X_test, y_train, y_test)
+        #self.buildLinRegSklearn(X_train, X_test, y_train, y_test)
         return
 
     def randomForest(self):
@@ -89,8 +117,10 @@ class buildModels:
         rfc_b = RFC()
         rfc_b.fit(X_train,y_train)
         y_pred = rfc_b.predict(X_train)
-        print('Train accuracy score:',accuracy_score(y_train,y_pred))
-        print('Test accuracy score:', accuracy_score(y_test,rfc_b.predict(X_test)))
+        print('Train accuracy score for random forest:',accuracy_score(y_train,y_pred))
+        print('Test accuracy score for random forest:', accuracy_score(y_test,rfc_b.predict(X_test)))
+        self.rf_train_acc.append(accuracy_score(y_train,y_pred))
+        self.rf_test_acc.append(accuracy_score(y_test,rfc_b.predict(X_test)))
         return
     
     def kNNeighbors(self):
@@ -98,17 +128,43 @@ class buildModels:
         knn = KNeighborsClassifier()
         knn.fit(X_train,y_train)
         y_pred = knn.predict(X_train)
-        print('Train accuracy score:',accuracy_score(y_train,y_pred))
-        print('Test accuracy score:',accuracy_score(y_test,knn.predict(X_test)))
+        print('Train accuracy score for KNN:',accuracy_score(y_train,y_pred))
+        print('Test accuracy score for KNN:',accuracy_score(y_test,knn.predict(X_test)))
+        self.knn_train_acc.append(accuracy_score(y_train,y_pred))
+        self.knn_test_acc.append(accuracy_score(y_test,knn.predict(X_test)))
         return
+    
+    def checkResults(self):
+        print("Test accuracy of lin reg: ", (sum(self.lin_reg_test_acc)/len(self.lin_reg_test_acc)))
+        print("Test accuracy of RF: ", (sum(self.rf_test_acc)/len(self.rf_test_acc)))
+        print("Test accuracy of KNN: ", (sum(self.knn_test_acc)/len(self.knn_test_acc)))
 
-    def main(self):
+    def main(self, num_runs):
         self.readCsvData()
         self.getDataInfo()
         #self.showDataTrends()
-        self.linearRegression()
-        self.randomForest()
-        self.kNNeighbors()
+        i = 0
+        while i < num_runs:
+            self.linearRegression()
+            self.randomForest()
+            self.kNNeighbors()
+            i += 1
+        self.checkResults()
 
 buildModels = buildModels()
-buildModels.main()
+num_runs = 10
+buildModels.main(num_runs)
+# Test accuracy of lin reg:  0.8085959864726048
+# Test accuracy of RF:  0.12497497497497498
+# Test accuracy of KNN:  0.04099099099099099
+
+# LIN REG
+# const                -595.142408
+# has_issues           4797.736632
+# has_wiki            -2764.894502
+# has_projects        -1721.407271
+# forks_count             0.143921
+# open_issues_count       3.948133
+# subscribers_count      22.265458
+# num_topics            345.056329
+# num_branches           35.687365
