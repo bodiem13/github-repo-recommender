@@ -2,6 +2,8 @@ import React, {useState} from 'react'
 import { SearchIcon } from '@heroicons/react/solid'
 import APIService from '../../APIService/APIService'
 import axios from 'axios';
+import history from '../History/History'
+import MakeAPiCalls from '../MakeApiCalls/MakeApiCalls'
 
 //props of placeholder and repoUrl are passed to the component
 const SearchBar = (props) => {
@@ -14,20 +16,44 @@ const SearchBar = (props) => {
         setRepoUrl(enteredUrl);
         console.log(event);
     }
+    
 
     const captureInput = () => {
-        console.log("Repository URL has been captured.")
-        console.log(repoUrl);
-        props.articleForm(repoUrl)
+        history.push('/Results')
         const userMessage = "The following user input has been handled: " + repoUrl
-        const mySplitUrl = repoUrl.split("github.com/")
-        let apiEnd = mySplitUrl[1]
-        const apiUrl = "https://api.github.com/repos/" + apiEnd
+        let apiUrl = MakeAPiCalls.buildApiUrl(repoUrl)
+        console.log("Inside search bar.js")
         console.log(apiUrl)
         fetch(apiUrl)
         .then(res => res.json())
         .then(data => {
             console.log(typeof(data))
+            // # has_issues           4634.716541 Done
+            // # has_wiki            -2568.089355 Done
+            // # has_projects        -1783.853471 Done
+            // # forks_count             0.145594 Done
+            // # open_issues_count       3.807028 Done
+            // # subscribers_count      22.076769 Done
+            // # num_topics            346.543219 
+            // # num_branches           43.965901
+            let stargazers_count =  data['stargazers_count']
+            let forks_count =  data['forks_count']
+            let open_issues_count = data['open_issues']
+            let subscribers_count = data['subscribers_count']
+            let has_issues = data['has_issues']
+            let has_wiki = data['has_wiki']
+            let has_projects = data['has_projects']
+            let full_name = data['full_name']
+            console.log(stargazers_count)
+            console.log(has_issues)
+            console.log(has_wiki)
+            console.log(has_projects)
+            console.log(forks_count)
+            console.log(open_issues_count)
+            console.log(subscribers_count)
+            // console.log(num_topics)
+            // console.log(num_branches)
+
             setUserEnteredUrl(
                 <div>
                     <h1 style={{textAlign: "left"}}>{data['full_name']}</h1>
