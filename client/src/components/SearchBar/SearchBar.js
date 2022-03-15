@@ -4,6 +4,7 @@ import APIService from '../../APIService/APIService'
 import axios from 'axios';
 import history from '../History/History'
 import MakeAPiCalls from '../MakeApiCalls/MakeApiCalls'
+import { useLinkClickHandler } from 'react-router-dom';
 
 //props of placeholder and repoUrl are passed to the component
 const SearchBar = (props) => {
@@ -24,6 +25,10 @@ const SearchBar = (props) => {
         let apiUrl = MakeAPiCalls.buildApiUrl(repoUrl)
         console.log("Inside search bar.js")
         console.log(apiUrl)
+        let apiData = MakeAPiCalls.fetchApiData(apiUrl)
+        console.log("Below is the data printed from the async function call")
+        console.log(apiData)
+        console.log("Above is data from async")
         fetch(apiUrl)
         .then(res => res.json())
         .then(data => {

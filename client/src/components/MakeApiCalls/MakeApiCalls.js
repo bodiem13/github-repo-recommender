@@ -1,6 +1,13 @@
 export default class MakeAPiCalls{
-    static getDataElements(){
-        return true
+    static async fetchApiData(apiUrl){
+        const apiData = fetch(apiUrl)
+            .then(res => res.json())
+            .then(data => {
+                console.log(typeof(data))
+                }
+            )
+        return apiData
+        
     }
 
     static buildApiUrl(repoUrl){
