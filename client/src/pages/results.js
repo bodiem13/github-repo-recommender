@@ -73,6 +73,7 @@ const Results = () => {
         <div className="justify-center align-middle h-32">
         <Navbar />
         <SearchBar placeholder = "Enter a GitHub Repository Url..." articleForm = {articleForm} insertedInformation = {insertedInformation}/>
+        <p>Test text for routing purposes</p>
         </div>
     )
 }
