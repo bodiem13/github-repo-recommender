@@ -26,6 +26,7 @@ const SearchBar = (props) => {
         console.log("Inside search bar.js")
         console.log(apiUrl)
         let apiData = MakeAPiCalls.fetchApiData(apiUrl)
+        let apiBranchesUrl = MakeAPiCalls.buildBranchesApiUrl(repoUrl)
         console.log("Below is the data printed from the async function call")
         console.log(apiData)
         console.log("Above is data from async")
@@ -40,7 +41,7 @@ const SearchBar = (props) => {
             // # open_issues_count       3.807028 Done
             // # subscribers_count      22.076769 Done
             // # num_topics            346.543219 
-            // # num_branches           43.965901
+            // # num_branches           43.965901 Done
             let stargazers_count =  data['stargazers_count']
             let forks_count =  data['forks_count']
             let open_issues_count = data['open_issues']
@@ -48,6 +49,7 @@ const SearchBar = (props) => {
             let has_issues = data['has_issues']
             let has_wiki = data['has_wiki']
             let has_projects = data['has_projects']
+            let num_topics = data['topics'].length
             let full_name = data['full_name']
             console.log(stargazers_count)
             console.log(has_issues)
@@ -56,6 +58,17 @@ const SearchBar = (props) => {
             console.log(forks_count)
             console.log(open_issues_count)
             console.log(subscribers_count)
+            fetch(apiBranchesUrl)
+            .then(res => res.json())
+            .then(mydata => {
+                let num_branches = mydata.length;
+                let num_stars_from_model = 4634.716541*has_issues + -2568.089355*has_wiki + -1783.853471*has_projects +
+                0.145594*forks_count + 3.807028*open_issues_count + 22.076769*subscribers_count + 346.543219*num_topics + 43.965901*num_branches
+                console.log("Here are the number of stars")
+                console.log(num_stars_from_model)
+                console.log("This is the num branches")
+                console.log(num_branches)
+                
             // console.log(num_topics)
             // console.log(num_branches)
 
@@ -65,8 +78,11 @@ const SearchBar = (props) => {
                     <p style={{textAlign: "left"}}>{"Number of forks: " + data['forks_count']}</p>
                     <p style={{textAlign: "left"}}>{"Number of open issues: " + data['open_issues']}</p>
                     <p style={{textAlign: "left"}}>{"Number of watchers: " + data['watchers_count']}</p>
+                    <p style={{textAlign: "left"}}>{"Number of topics: " + data['topics'].length}</p>
+                    <p style={{textAlign: "left"}}>{"Number of branches: " + mydata.length}</p>
                 </div>
                 )
+            });
             console.log(data);
             return data
         })

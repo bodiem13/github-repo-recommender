@@ -19,5 +19,12 @@ export default class MakeAPiCalls{
         return apiUrl
     }
 
+    static buildBranchesApiUrl(repoUrl){
+        const mySplitUrl = repoUrl.split("github.com/")
+        let apiEnd = mySplitUrl[1]
+        const branchesUrl = "https://api.github.com/repos/" + apiEnd + "/branches"
+        console.log(branchesUrl)
 
+        return branchesUrl
+    }
 } 
