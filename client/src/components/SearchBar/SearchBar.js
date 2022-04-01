@@ -69,6 +69,14 @@ const SearchBar = (props) => {
         }
       }
     
+    const finalRecommendations = (has_issues, has_wiki, has_pages) => {
+        if (has_issues === true || has_wiki === true || has_pages === true) {
+          return <h1>{messageDict["Overall"]["someComments"]}</h1>;
+        } else {
+          return <h1>{messageDict["Overall"]["noComments"]}</h1>;
+        }
+      }
+    
 
     const captureInput = () => {
         history.push('/Results')
@@ -84,7 +92,7 @@ const SearchBar = (props) => {
         fetch(apiUrl)
         .then(res => res.json())
         .then(data => {
-            console.log(typeof(data))
+            console.log(data)
             // # has_issues           4634.716541 Done
             // # has_wiki            -2568.089355 Done
             // # has_projects        -1783.853471 Done
@@ -103,6 +111,7 @@ const SearchBar = (props) => {
             let num_topics = data['topics'].length
             let full_name = data['full_name']
             let has_pages = data['has_pages']
+            let repo_name = data['name']
             fetch(apiBranchesUrl)
             .then(res => res.json())
             .then(mydata => {
@@ -113,8 +122,8 @@ const SearchBar = (props) => {
 
             setUserEnteredUrl(
                 <div>
-                <h1 style={{textAlign: "left"}}>{data['full_name']} Results</h1>
-                <table class="table-auto">
+                <h1 style={{textAlign: "left"}}>{repo_name}</h1>
+                <table className="table-auto">
                     <thead>
                     <tr>
                         <th>Criteria</th>
@@ -129,6 +138,7 @@ const SearchBar = (props) => {
                     {checkBoolOfRepo(has_pages, 'Pages')}
                     </tbody>
                 </table>
+                {finalRecommendations(has_issues, has_wiki, has_pages)}
                     {/*
                     <p style={{textAlign: "left"}}>{"Number of forks: " + data['forks_count']}</p>
                     <p style={{textAlign: "left"}}>{"Number of open issues: " + data['open_issues']}</p>
