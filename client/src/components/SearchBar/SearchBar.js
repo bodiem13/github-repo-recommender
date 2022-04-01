@@ -40,15 +40,15 @@ const SearchBar = (props) => {
     const checkNumStars = (stargazers_count, num_stars_from_model) => {
         if (num_stars_from_model<stargazers_count) {
           return <tr>
-                    <td>Number of Stars Predicted</td>
-                    <td>{num_stars_from_model}</td>
+                    <td className="text-center">Number of Stars Predicted</td>
+                    <td className="text-center">{num_stars_from_model}</td>
                     <td>Your repo is very popular!!</td>
                 </tr>;
         } else {
           return <tr>
-                    <td>Number of Stars Predicted</td>
-                    <td>{num_stars_from_model}</td>
-                    <td>We were expecting more stars.</td>
+                    <td className="text-center">Number of Stars Predicted</td>
+                    <td className="text-center">{num_stars_from_model}</td>
+                    <td className="text-center">We were expecting more stars.</td>
                 </tr>;
         }
       }
@@ -56,15 +56,15 @@ const SearchBar = (props) => {
     const checkBoolOfRepo = (repo_bool, feature) => {
         if (repo_bool===true) {
           return <tr>
-                    <td>{feature}</td>
-                    <td>{repo_bool}</td>
-                    <td>{messageDict[feature]["exists"]}</td>
+                    <td className="text-center">{feature}</td>
+                    <td className="bg-lime-300 text-center">{repo_bool}</td>
+                    <td className="bg-lime-300 text-center">{messageDict[feature]["exists"]}</td>
                 </tr>;
         } else {
           return <tr>
-                    <td>{feature}</td>
-                    <td>{repo_bool}</td>
-                    <td>{messageDict[feature]["noExist"]}</td>
+                    <td className="text-center">{feature}</td>
+                    <td className="bg-yellow-300 text-center">{repo_bool}</td>
+                    <td className="bg-yellow-300 text-center">{messageDict[feature]["noExist"]}</td>
                 </tr>;
         }
       }
@@ -121,24 +121,26 @@ const SearchBar = (props) => {
                 num_stars_from_model = Math.round(num_stars_from_model)
 
             setUserEnteredUrl(
+                <div className="justify-center">
+                <h1 className="text-center">{repo_name}</h1>
                 <div>
-                <h1 style={{textAlign: "left"}}>{repo_name}</h1>
-                <table className="table-auto">
-                    <thead>
-                    <tr>
-                        <th>Criteria</th>
-                        <th>Result</th>
-                        <th>Recommendation</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {checkNumStars(stargazers_count, num_stars_from_model)}
-                    {checkBoolOfRepo(has_issues, 'Issues')}
-                    {checkBoolOfRepo(has_wiki, 'Wiki')}
-                    {checkBoolOfRepo(has_pages, 'Pages')}
-                    </tbody>
-                </table>
-                {finalRecommendations(has_issues, has_wiki, has_pages)}
+                    <table className="table-auto justify-center">
+                        <thead>
+                            <tr>
+                                <th className="text-center">Criteria</th>
+                                <th className="text-center">Result</th>
+                                <th className="text-center">Recommendation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {checkNumStars(stargazers_count, num_stars_from_model)}
+                            {checkBoolOfRepo(has_issues, 'Issues')}
+                            {checkBoolOfRepo(has_wiki, 'Wiki')}
+                            {checkBoolOfRepo(has_pages, 'Pages')}
+                        </tbody>
+                    </table>
+                    {finalRecommendations(has_issues, has_wiki, has_pages)}
+                </div>
                     {/*
                     <p style={{textAlign: "left"}}>{"Number of forks: " + data['forks_count']}</p>
                     <p style={{textAlign: "left"}}>{"Number of open issues: " + data['open_issues']}</p>
