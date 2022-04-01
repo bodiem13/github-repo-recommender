@@ -18,6 +18,22 @@ const SearchBar = (props) => {
         console.log(event);
     }
     
+    const checkNumStars = (stargazers_count, num_stars_from_model) => {
+        if (num_stars_from_model>stargazers_count) {
+          return <tr>
+                    <td>Number of Stars Predicted</td>
+                    <td>{num_stars_from_model}</td>
+                    <td>Your repo is very popular!!</td>
+                </tr>;
+        } else {
+          return <tr>
+                    <td>Number of Stars Predicted</td>
+                    <td>{num_stars_from_model}</td>
+                    <td>We were expecting more stars!</td>
+                </tr>;
+        }
+      }
+    
 
     const captureInput = () => {
         history.push('/Results')
@@ -74,7 +90,19 @@ const SearchBar = (props) => {
 
             setUserEnteredUrl(
                 <div>
-                    <h1 style={{textAlign: "left"}}>{data['full_name']}</h1>
+                <h1 style={{textAlign: "left"}}>{data['full_name']} Results</h1>
+                <table class="table-auto">
+                    <thead>
+                    <tr>
+                        <th>Criteria</th>
+                        <th>Result</th>
+                        <th>Recommendation</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {checkNumStars(stargazers_count, num_stars_from_model)}
+                    </tbody>
+                </table>
                     <p style={{textAlign: "left"}}>{"Number of forks: " + data['forks_count']}</p>
                     <p style={{textAlign: "left"}}>{"Number of open issues: " + data['open_issues']}</p>
                     <p style={{textAlign: "left"}}>{"Number of watchers: " + data['watchers_count']}</p>
