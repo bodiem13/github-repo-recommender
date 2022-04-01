@@ -8,6 +8,25 @@ import { useLinkClickHandler } from 'react-router-dom';
 
 //props of placeholder and repoUrl are passed to the component
 const SearchBar = (props) => {
+    var messageDict = {
+        "Issues": {
+            "exists": "Repo has issues!",
+            "noExist": "Consider creating issues for code changes."
+        },
+        "Wiki": {
+            "exists": "Repo has a wiki!",
+            "noExist": "Consider adding a wiki to improve documentation."
+        },
+        "Pages": {
+            "exists": "Repo has a pages site!",
+            "noExist": "Consider adding a pages site to improve documentation."
+        },
+        "Overall": {
+            "someComments": "Overall, with a few improvements, the maintainability and scalability of your repository can be improved!",
+            "noComments": "Overall, your repository appears to have good documentation. More visibility into your project will hopefully come soon!"
+        }
+      };
+
     const [repoUrl, setRepoUrl] = useState("");
     const [userEnteredUrl, setUserEnteredUrl] = useState("");
 
@@ -19,7 +38,7 @@ const SearchBar = (props) => {
     }
     
     const checkNumStars = (stargazers_count, num_stars_from_model) => {
-        if (num_stars_from_model>stargazers_count) {
+        if (num_stars_from_model<stargazers_count) {
           return <tr>
                     <td>Number of Stars Predicted</td>
                     <td>{num_stars_from_model}</td>
@@ -29,7 +48,23 @@ const SearchBar = (props) => {
           return <tr>
                     <td>Number of Stars Predicted</td>
                     <td>{num_stars_from_model}</td>
-                    <td>We were expecting more stars!</td>
+                    <td>We were expecting more stars.</td>
+                </tr>;
+        }
+      }
+    
+    const checkBoolOfRepo = (repo_bool, feature) => {
+        if (repo_bool===true) {
+          return <tr>
+                    <td>{feature}</td>
+                    <td>{repo_bool}</td>
+                    <td>{messageDict[feature]["exists"]}</td>
+                </tr>;
+        } else {
+          return <tr>
+                    <td>{feature}</td>
+                    <td>{repo_bool}</td>
+                    <td>{messageDict[feature]["noExist"]}</td>
                 </tr>;
         }
       }
@@ -67,26 +102,14 @@ const SearchBar = (props) => {
             let has_projects = data['has_projects']
             let num_topics = data['topics'].length
             let full_name = data['full_name']
-            console.log(stargazers_count)
-            console.log(has_issues)
-            console.log(has_wiki)
-            console.log(has_projects)
-            console.log(forks_count)
-            console.log(open_issues_count)
-            console.log(subscribers_count)
+            let has_pages = data['has_pages']
             fetch(apiBranchesUrl)
             .then(res => res.json())
             .then(mydata => {
                 let num_branches = mydata.length;
                 let num_stars_from_model = 4634.716541*has_issues + -2568.089355*has_wiki + -1783.853471*has_projects +
                 0.145594*forks_count + 3.807028*open_issues_count + 22.076769*subscribers_count + 346.543219*num_topics + 43.965901*num_branches
-                console.log("Here are the number of stars")
-                console.log(num_stars_from_model)
-                console.log("This is the num branches")
-                console.log(num_branches)
-                
-            // console.log(num_topics)
-            // console.log(num_branches)
+                num_stars_from_model = Math.round(num_stars_from_model)
 
             setUserEnteredUrl(
                 <div>
@@ -101,13 +124,18 @@ const SearchBar = (props) => {
                     </thead>
                     <tbody>
                     {checkNumStars(stargazers_count, num_stars_from_model)}
+                    {checkBoolOfRepo(has_issues, 'Issues')}
+                    {checkBoolOfRepo(has_wiki, 'Wiki')}
+                    {checkBoolOfRepo(has_pages, 'Pages')}
                     </tbody>
                 </table>
+                    {/*
                     <p style={{textAlign: "left"}}>{"Number of forks: " + data['forks_count']}</p>
                     <p style={{textAlign: "left"}}>{"Number of open issues: " + data['open_issues']}</p>
                     <p style={{textAlign: "left"}}>{"Number of watchers: " + data['watchers_count']}</p>
                     <p style={{textAlign: "left"}}>{"Number of topics: " + data['topics'].length}</p>
                     <p style={{textAlign: "left"}}>{"Number of branches: " + mydata.length}</p>
+                    */}
                 </div>
                 )
             });
