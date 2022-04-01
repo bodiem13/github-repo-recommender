@@ -71,9 +71,9 @@ const SearchBar = (props) => {
     
     const finalRecommendations = (has_issues, has_wiki, has_pages) => {
         if (has_issues === true || has_wiki === true || has_pages === true) {
-          return <h1>{messageDict["Overall"]["someComments"]}</h1>;
+          return <p>{messageDict["Overall"]["someComments"]}</p>;
         } else {
-          return <h1>{messageDict["Overall"]["noComments"]}</h1>;
+          return <p>{messageDict["Overall"]["noComments"]}</p>;
         }
       }
     
@@ -123,13 +123,13 @@ const SearchBar = (props) => {
             setUserEnteredUrl(
                 <div className="justify-center">
                 <h1 className="text-center">{repo_name}</h1>
-                <div>
+                <div className="grid place-items-center h-screen">
                     <table className="table-auto justify-center">
                         <thead>
                             <tr>
-                                <th className="text-center">Criteria</th>
-                                <th className="text-center">Result</th>
-                                <th className="text-center">Recommendation</th>
+                                <th className="text-center bg-gray-github text-white">Criteria</th>
+                                <th className="text-center bg-gray-github text-white">Result</th>
+                                <th className="text-center bg-gray-github text-white">Recommendation</th>
                             </tr>
                         </thead>
                         <tbody>
