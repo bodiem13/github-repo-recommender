@@ -22,12 +22,8 @@ You will also see any lint errors in the console.
 
 ### Run React app through Docker
 1. `docker build -t github:react-app .`
-2. `docker run -p 3001:3000 github:react-app`
-3. [View github recommender here](http://localhost:3001)
-
-### Run with more parameters
-```
-docker run \
+2. ```
+    docker run \
     -it \
     --rm \
     -v ${PWD}:/app \
@@ -35,7 +31,6 @@ docker run \
     -p 3001:3000 \
     -e CHOKIDAR_USEPOLLING=true \
     github:react-app
-```
-
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+    ```
+3. [View github recommender here](http://localhost:3001)
 
