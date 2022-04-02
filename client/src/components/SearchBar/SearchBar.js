@@ -40,31 +40,33 @@ const SearchBar = (props) => {
     const checkNumStars = (stargazers_count, num_stars_from_model) => {
         if (num_stars_from_model<stargazers_count) {
           return <tr>
-                    <td className="text-center">Number of Stars Predicted</td>
-                    <td className="text-center">{num_stars_from_model}</td>
-                    <td>Your repo is very popular!!</td>
+                    <td className="text-center border-solid border-3 border-gray-github">Stars Predicted / Actual Stars</td>
+                    <td className="text-center bg-lime-300 border-solid border-3 border-gray-github">{num_stars_from_model} / {stargazers_count}</td>
+                    <td className="text-center bg-lime-300 border-solid border-3 border-gray-github">Your repo is very popular!!</td>
                 </tr>;
         } else {
           return <tr>
-                    <td className="text-center">Number of Stars Predicted</td>
-                    <td className="text-center">{num_stars_from_model}</td>
-                    <td className="text-center">We were expecting more stars.</td>
+                    <td className="text-center border-solid border-3 border-gray-github">Stars Predicted / Actual Stars</td>
+                    <td className="text-center bg-yellow-300 border-solid border-3 border-gray-github">{num_stars_from_model} / {stargazers_count}</td>
+                    <td className="text-center bg-yellow-300 border-solid border-3 border-gray-github">We were expecting more stars.</td>
                 </tr>;
         }
       }
     
     const checkBoolOfRepo = (repo_bool, feature) => {
         if (repo_bool===true) {
+            console.log("Below is repo_bool")
+            console.log(repo_bool)
           return <tr>
-                    <td className="text-center">{feature}</td>
-                    <td className="bg-lime-300 text-center">{repo_bool}</td>
-                    <td className="bg-lime-300 text-center">{messageDict[feature]["exists"]}</td>
+                    <td className="text-center border-solid border-3 border-gray-github">{feature}</td>
+                    <td className="bg-lime-300 text-center border-solid border-3 border-gray-github">{repo_bool.toString()}</td>
+                    <td className="bg-lime-300 text-center border-solid border-3 border-gray-github">{messageDict[feature]["exists"]}</td>
                 </tr>;
         } else {
           return <tr>
-                    <td className="text-center">{feature}</td>
-                    <td className="bg-yellow-300 text-center">{repo_bool}</td>
-                    <td className="bg-yellow-300 text-center">{messageDict[feature]["noExist"]}</td>
+                    <td className="text-center border-solid border-3 border-gray-github">{feature}</td>
+                    <td className="bg-yellow-300 text-center border-solid border-3 border-gray-github">{repo_bool.toString()}</td>
+                    <td className="bg-yellow-300 text-center border-solid border-3 border-gray-github">{messageDict[feature]["noExist"]}</td>
                 </tr>;
         }
       }
@@ -122,14 +124,14 @@ const SearchBar = (props) => {
 
             setUserEnteredUrl(
                 <div className="justify-center">
-                <h1 className="text-center">{repo_name}</h1>
-                <div className="grid place-items-center h-screen">
+                <h1 className="text-center pt-8">Respository name: {full_name}</h1>
+                <div className="grid h-screen pr-14 pl-14">
                     <table className="table-auto justify-center">
                         <thead>
                             <tr>
-                                <th className="text-center bg-gray-github text-white">Criteria</th>
-                                <th className="text-center bg-gray-github text-white">Result</th>
-                                <th className="text-center bg-gray-github text-white">Recommendation</th>
+                                <th className="text-center bg-gray-github text-white pr-14 pl-14 pt-6 pb-6 border-solid border-3 border-gray-github">Criteria</th>
+                                <th className="text-center bg-gray-github text-white pr-14 pl-14 pt-6 pb-6 border-solid border-3 border-gray-github">Result</th>
+                                <th className="text-center bg-gray-github text-white pr-14 pl-14 pt-6 pb-6 border-solid border-3 border-gray-github">Comments</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -159,7 +161,7 @@ const SearchBar = (props) => {
         APIService.InsertArticle({title, description})
         .then(resp => props.insertedInformation(resp))
 
-        setUserEnteredUrl(<p style={{textAlign: "left"}}>{userMessage}</p>)
+        // setUserEnteredUrl(<p style={{textAlign: "left"}}>{userMessage}</p>)
     }
     // const insertArticle = () => {
     //     APIService.InsertArticle({title, description})
