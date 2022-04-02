@@ -40,15 +40,15 @@ const SearchBar = (props) => {
     const checkNumStars = (stargazers_count, num_stars_from_model) => {
         if (num_stars_from_model<stargazers_count) {
           return <tr>
-                    <td className="text-center border-solid border-3 border-gray-github">Stars Predicted / Actual Stars</td>
-                    <td className="text-center bg-lime-300 border-solid border-3 border-gray-github">{num_stars_from_model} / {stargazers_count}</td>
-                    <td className="text-center bg-lime-300 border-solid border-3 border-gray-github">Your repo is very popular!!</td>
+                    <td className="text-center border-solid border-3 border-gray-github pt-6 pb-6">Stars Predicted / Actual Stars</td>
+                    <td className="text-center bg-lime-300 border-solid border-3 border-gray-github pt-6 pb-6">{num_stars_from_model} / {stargazers_count}</td>
+                    <td className="text-center bg-lime-300 border-solid border-3 border-gray-github pt-6 pb-6">Your repo is very popular!!</td>
                 </tr>;
         } else {
           return <tr>
-                    <td className="text-center border-solid border-3 border-gray-github">Stars Predicted / Actual Stars</td>
-                    <td className="text-center bg-yellow-300 border-solid border-3 border-gray-github">{num_stars_from_model} / {stargazers_count}</td>
-                    <td className="text-center bg-yellow-300 border-solid border-3 border-gray-github">We were expecting more stars.</td>
+                    <td className="text-center border-solid border-3 border-gray-github pt-6 pb-6">Stars Predicted / Actual Stars</td>
+                    <td className="text-center bg-yellow-300 border-solid border-3 border-gray-github pt-6 pb-6">{num_stars_from_model} / {stargazers_count}</td>
+                    <td className="text-center bg-yellow-300 border-solid border-3 border-gray-github pt-6 pb-6">We were expecting more stars.</td>
                 </tr>;
         }
       }
@@ -58,15 +58,15 @@ const SearchBar = (props) => {
             console.log("Below is repo_bool")
             console.log(repo_bool)
           return <tr>
-                    <td className="text-center border-solid border-3 border-gray-github">{feature}</td>
-                    <td className="bg-lime-300 text-center border-solid border-3 border-gray-github">{repo_bool.toString()}</td>
-                    <td className="bg-lime-300 text-center border-solid border-3 border-gray-github">{messageDict[feature]["exists"]}</td>
+                    <td className="text-center border-solid border-3 border-gray-github pt-6 pb-6">{feature}</td>
+                    <td className="bg-lime-300 text-center border-solid border-3 border-gray-github pt-6 pb-6">{repo_bool.toString()}</td>
+                    <td className="bg-lime-300 text-center border-solid border-3 border-gray-github pt-6 pb-6">{messageDict[feature]["exists"]}</td>
                 </tr>;
         } else {
           return <tr>
-                    <td className="text-center border-solid border-3 border-gray-github">{feature}</td>
-                    <td className="bg-yellow-300 text-center border-solid border-3 border-gray-github">{repo_bool.toString()}</td>
-                    <td className="bg-yellow-300 text-center border-solid border-3 border-gray-github">{messageDict[feature]["noExist"]}</td>
+                    <td className="text-center border-solid border-3 border-gray-github pt-6 pb-6">{feature}</td>
+                    <td className="bg-yellow-300 text-center border-solid border-3 border-gray-github pt-6 pb-6">{repo_bool.toString()}</td>
+                    <td className="bg-yellow-300 text-center border-solid border-3 border-gray-github pt-6 pb-6">{messageDict[feature]["noExist"]}</td>
                 </tr>;
         }
       }
@@ -125,7 +125,7 @@ const SearchBar = (props) => {
             setUserEnteredUrl(
                 <div className="justify-center">
                 <h1 className="text-center pt-8">Respository name: {full_name}</h1>
-                <div className="grid h-screen pr-14 pl-14">
+                <div className="grid pr-14 pl-14">
                     <table className="table-auto justify-center">
                         <thead>
                             <tr>
@@ -143,13 +143,6 @@ const SearchBar = (props) => {
                     </table>
                     {finalRecommendations(has_issues, has_wiki, has_pages)}
                 </div>
-                    {/*
-                    <p style={{textAlign: "left"}}>{"Number of forks: " + data['forks_count']}</p>
-                    <p style={{textAlign: "left"}}>{"Number of open issues: " + data['open_issues']}</p>
-                    <p style={{textAlign: "left"}}>{"Number of watchers: " + data['watchers_count']}</p>
-                    <p style={{textAlign: "left"}}>{"Number of topics: " + data['topics'].length}</p>
-                    <p style={{textAlign: "left"}}>{"Number of branches: " + mydata.length}</p>
-                    */}
                 </div>
                 )
             });
