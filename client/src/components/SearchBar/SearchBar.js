@@ -72,10 +72,10 @@ const SearchBar = (props) => {
       }
     
     const finalRecommendations = (has_issues, has_wiki, has_pages) => {
-        if (has_issues === true || has_wiki === true || has_pages === true) {
-          return <p>{messageDict["Overall"]["someComments"]}</p>;
+        if (has_issues === false || has_wiki === false || has_pages === false) {
+          return <p className="text-center pt-4 font-semibold text-2xl">{messageDict["Overall"]["someComments"]}</p>;
         } else {
-          return <p>{messageDict["Overall"]["noComments"]}</p>;
+          return <p className="text-center pt-4 font-semibold text-2xl">{messageDict["Overall"]["noComments"]}</p>;
         }
       }
     
