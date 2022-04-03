@@ -1,5 +1,5 @@
 # set node version
-FROM node:12.18.3
+FROM node:16.13.2
 
 # set working direction
 WORKDIR /app

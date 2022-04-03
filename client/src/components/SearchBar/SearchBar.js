@@ -1,10 +1,8 @@
 import React, {useState} from 'react'
 import { SearchIcon } from '@heroicons/react/solid'
 import APIService from '../../APIService/APIService'
-import axios from 'axios';
 import history from '../History/History'
 import MakeAPiCalls from '../MakeApiCalls/MakeApiCalls'
-import { useLinkClickHandler } from 'react-router-dom';
 
 //props of placeholder and repoUrl are passed to the component
 const SearchBar = (props) => {
